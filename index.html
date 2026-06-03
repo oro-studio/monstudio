@@ -365,7 +365,7 @@ function viewToday(){
 
   // stats
   html+=`<div class="stats">
-    <div class="stat"><div class="v">${fmtDur(secToday)}</div><div class="k">Aujourd’hui</div></div>
+    <div class="stat"><div class="v">${fmtDur(secToday)}</div><div class="k">Aujourd'hui</div></div>
     <div class="stat"><div class="v">${tasksLeft}</div><div class="k">À faire</div></div>
     <div class="stat"><div class="v">${todayAppts.length}</div><div class="k">RDV</div></div>
   </div>`;
@@ -377,14 +377,14 @@ function viewToday(){
       <div class="who">${esc(a.title||studName(a.studentId)||'Rendez-vous')}${a.src==='google'?' <span class="pill tag" style="background:#e8f0fe;color:#1a56c4;border-color:#cfe0fb;font-size:9.5px;vertical-align:middle">Google</span>':''}</div>
       <div class="info">${a.studentId?esc(studName(a.studentId)||''):''}${a.dur?` · ${a.dur} min`:''}${a.notes?' · '+esc(a.notes):''}${a.location?' · '+esc(a.location):''}</div>
       </div></div>`).join('');
-  } else html+=`<div class="empty"><div class="ico">○</div><p>Aucun rendez-vous aujourd’hui</p></div>`;
+  } else html+=`<div class="empty"><div class="ico">○</div><p>Aucun rendez-vous aujourd'hui</p></div>`;
   html+=`</div>`;
 
   // tasks of the day (routine)
   html+=`<div class="section-head"><h2>À faire ${DOW_FULL[ti].toLowerCase()}</h2></div><div class="card">`;
   if(todayTasks.length){
     html+=todayTasks.map(routineRow).join('');
-  } else html+=`<div class="empty"><div class="ico">✓</div><p>Rien de prévu aujourd’hui. Profite !</p></div>`;
+  } else html+=`<div class="empty"><div class="ico">✓</div><p>Rien de prévu aujourd'hui. Profite !</p></div>`;
   html+=`</div>`;
 
   // sauvegarde / restauration
@@ -397,7 +397,7 @@ function viewToday(){
   if(S.backupMode==='save'){
     const json=backupJSON();
     html+=`<div style="margin-top:14px">
-      <div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:6px">Copie ce texte et garde-le (note, mail à toi-même…). Pour récupérer tes données plus tard, tu le colleras dans « Restaurer ».</div>
+      <div style="font-size:12.5px;color:var(--ink-soft);margin-bottom:6px">Copie ce texte et garde-le (note, mail à toi-même…). Pour récupérer tes données plus tard, tu le colleras dans « Restaurer ».</div>
       <textarea class="input" id="bk-out" readonly style="min-height:90px;font-size:11px;font-family:monospace">${esc(json)}</textarea>
       <div style="display:flex;gap:10px;margin-top:10px">
         <button class="btn sm" data-act="backup-copy" style="flex:1">Copier le texte</button>
@@ -468,12 +468,12 @@ function viewTasks(){
       const isToday=i===ti;
       return `<div style="padding:6px 0 ${i<6?'10px':'0'};${i>0?'border-top:1px solid var(--line);margin-top:6px':''}">
         <div style="display:flex;align-items:center;gap:8px;margin:6px 0 2px">
-          <span style="font-family:var(--serif);font-size:15px;font-weight:600;${isToday?'color:var(--accent)':''}">${name}</span>
+          <span style="font-family:var(--serif);font-size:15px;font-weight:600;${isToday?'color:var(--accent)':''}}">${name}</span>
           ${isToday?'<span class="pill" style="background:var(--accent-soft);color:var(--accent-2)">aujourd’hui</span>':''}</div>
         ${tasks.length? tasks.map(routineRow).join('') : `<div style="font-size:13px;color:var(--muted);padding:4px 0 2px">—</div>`}
       </div>`;
     }).join('');
-  } else html+=`<div class="empty"><div class="ico">✎</div><p>Aucune tâche récurrente.<br>Ajoute par exemple « lundi → préparer les cours ».</p></div>`;
+  } else html+=`<div class="empty"><div class="ico">✎</div><p>Aucune tâche récurrente.<br>Ajoute par exemple « lundi → préparer les cours ».</p></div>`;
   html+=`</div>`;
   return html;
 }
@@ -487,7 +487,7 @@ function viewStudents(){
   let html=header('Élèves');
   html+=`<details class="add"><summary><div class="add-trigger">＋ Nouvel élève</div></summary>
     <div class="add-panel"><h3>Nouvel élève</h3>
-      <div class="field"><label>Prénom</label><input class="input" id="sa-name" placeholder="Prénom de l’élève"></div>
+      <div class="field"><label>Prénom</label><input class="input" id="sa-name" placeholder="Prénom de l'élève"></div>
       <button class="btn full" data-act="student-add">Ajouter</button>
     </div></details>`;
   if(S.students.length>6) html+=`<div class="field"><input class="input" id="s-search" placeholder="🔎 Rechercher un élève" value="${esc(S._q||'')}"></div>`;
@@ -512,7 +512,7 @@ function viewStudentDetail(){
 
   html+=`<div class="card">
     <div class="field"><label>🎯 Objectifs de la semaine</label>
-      <textarea class="input" id="s-obj" placeholder="Ce que l’élève doit atteindre cette semaine…" style="min-height:90px">${esc(s.objectives||'')}</textarea></div>
+      <textarea class="input" id="s-obj" placeholder="Ce que l'élève doit atteindre cette semaine…" style="min-height:90px">${esc(s.objectives||'')}</textarea></div>
     <div class="field" style="margin-bottom:14px"><label>📝 Note</label>
       <textarea class="input" id="s-note" placeholder="Remarques, progrès, points à retravailler…" style="min-height:110px">${esc(s.note||'')}</textarea></div>
     <button class="btn full" data-act="student-save" data-id="${s.id}">Enregistrer</button>
@@ -525,7 +525,7 @@ function viewStudentDetail(){
         <button class="btn outline" data-act="student-del-no">Annuler</button>
       </div></div>`;
   } else {
-    html+=`<button class="btn danger full" data-act="student-del" data-id="${s.id}" style="margin-top:4px">🗑 Supprimer l’élève</button>`;
+    html+=`<button class="btn danger full" data-act="student-del" data-id="${s.id}" style="margin-top:4px">🗑 Supprimer l'élève</button>`;
   }
   return html;
 }
@@ -649,7 +649,7 @@ function viewTime(){
       return `<div class="tl-block ${cls}" ${b.kind==='run'?'id="run-block"':''} style="top:${top}px;height:${h}px;left:${left}%;width:${w}%">
         ${badge}${delBtn}
         <div class="b-lbl">${esc(b.label)}</div>
-        <div class="b-dur">${b.kind==='run'?'● ':''}${fmtDur(b.dur)}</div>
+        <div class="b-dur">${b.kind==='run'?'● ':''} ${fmtDur(b.dur)}</div>
       </div>`;
     }).join('');
     return `<div class="tl-col" style="background-image:repeating-linear-gradient(var(--surface),var(--surface) ${HH-1}px,var(--line) ${HH-1}px,var(--line) ${HH}px)">${inner}</div>`;
@@ -698,7 +698,7 @@ function viewAgenda(){
     <div class="cal-head">
       <div class="mname">${MONTHS[m]} ${y}</div>
       <div class="cal-nav">
-        <button data-act="cal-today" title="Aujourd’hui">●</button>
+        <button data-act="cal-today" title="Aujourd'hui">●</button>
         <button data-act="cal-prev">‹</button>
         <button data-act="cal-next">›</button>
       </div>
@@ -736,7 +736,7 @@ function viewAgenda(){
   html+=`<details class="add"><summary><div class="add-trigger">＋ Nouveau rendez-vous le ${shortDate(sel)}</div></summary>
     <div class="add-panel"><h3>Nouveau rendez-vous</h3>
       <div class="field"><label>Élève</label><select class="input" id="ap-stud"><option value="">— Aucun / autre —</option>${S.students.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></div>
-      <div class="field"><label>Intitulé (si pas d’élève)</label><input class="input" id="ap-title" placeholder="Réunion, visio…"></div>
+      <div class="field"><label>Intitulé (si pas d'élève)</label><input class="input" id="ap-title" placeholder="Réunion, visio…"></div>
       <div class="row">
         <div class="field"><label>Date</label><input class="input" id="ap-date" type="date" value="${sel}"></div>
         <div class="field"><label>Heure</label><input class="input" id="ap-time" type="time"></div>
