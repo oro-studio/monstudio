@@ -114,6 +114,21 @@ main{max-width:1180px;margin:0 auto;padding:24px 16px 96px}
 .tab[aria-selected="true"]{background:var(--accent-soft);border-color:var(--accent-border);color:var(--lavender)}
 .tab[aria-selected="true"] .n{background:rgba(99,102,241,.25);color:var(--lavender)}
 
+/* ---------- Pastilles de spécialités (sous l'onglet famille) ---------- */
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.pill{
+  display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:99px;
+  background:var(--surface);border:1px solid var(--border);color:var(--muted);font-size:14px;font-weight:500;
+}
+.pill svg{width:15px;height:15px;color:var(--c,var(--muted))}
+.pill .n{font-size:12px;color:var(--faint)}
+.pill:hover{color:var(--text);border-color:var(--border-strong)}
+.pill[aria-pressed="true"]{color:var(--c,var(--lavender));border-color:color-mix(in srgb,var(--c,#818cf8) 50%,transparent);background:color-mix(in srgb,var(--c,#818cf8) 14%,transparent)}
+.pill[aria-pressed="true"] .n{color:inherit;opacity:.8}
+.pill:disabled{opacity:.45;cursor:default}
+.fam-title{font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin:12px 0 8px}
+.fam-title:first-child{margin-top:0}
+
 /* ---------- Filtres ---------- */
 .filters{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0;align-items:center}
 .select{position:relative}
@@ -321,6 +336,7 @@ textarea.input{height:auto;min-height:80px;padding:12px 14px;resize:vertical}
   </div>
 
   <nav class="tabs" id="tabs" role="tablist"></nav>
+  <div class="pills" id="pills" hidden></div>
 
   <div class="filters">
     <div class="select" id="wrapExp">
@@ -375,7 +391,7 @@ textarea.input{height:auto;min-height:80px;padding:12px 14px;resize:vertical}
 
     <div class="field">
       <span class="lbl">Spécialités <span class="hint">(une ou plusieurs)</span></span>
-      <div class="choices" id="fSpecs"></div>
+      <div id="fSpecs"></div>
       <div class="err" id="errSpecs">Choisis au moins une spécialité.</div>
     </div>
 
@@ -428,43 +444,50 @@ textarea.input{height:auto;min-height:80px;padding:12px 14px;resize:vertical}
 
 <script>
 /* =====================================================================
-   CONFIG — pour ajouter une spécialité : une ligne dans SPECIALTIES
-   (+ une couleur .s-xxx dans le CSS si tu veux une teinte dédiée).
+   CONFIG — pour ajouter une spécialité : une ligne dans SPECIALTIES avec
+   sa famille (+ une couleur .s-xxx dans le CSS si tu veux une teinte dédiée).
+   Pour ajouter une famille : une ligne dans FAMILIES.
    ===================================================================== */
+const FAMILIES = [
+  { id:'av',     label:'Audiovisuel',       icon:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/>' },
+  { id:'design', label:'Design',            icon:'<circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2a10 10 0 0 0 0 20 2 2 0 0 0 2-2c0-.5-.2-1-.5-1.4-.3-.3-.5-.8-.5-1.3a2 2 0 0 1 2-2h2.3A5.7 5.7 0 0 0 22 9.6C22 5.4 17.5 2 12 2z"/>' },
+  { id:'mkt',    label:'Marketing & vente', icon:'<path d="M3 11l15-6v14L3 13z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>' },
+];
+
 const SPECIALTIES = [
-  { id:'drone',  label:'Droniste',      cls:'s-drone',  icon:'<path d="M5 5h3M16 5h3M6.5 5v3M17.5 5v3"/><rect x="9" y="9" width="6" height="5" rx="1.5"/><path d="M6.5 8L9 10M17.5 8L15 10M10 14l-1.5 3M14 14l1.5 3"/>',
+  { id:'drone',  family:'av', label:'Droniste',      cls:'s-drone',  icon:'<path d="M5 5h3M16 5h3M6.5 5v3M17.5 5v3"/><rect x="9" y="9" width="6" height="5" rx="1.5"/><path d="M6.5 8L9 10M17.5 8L15 10M10 14l-1.5 3M14 14l1.5 3"/>',
     gear:['DJI Mini 4 Pro','DJI Air 3','DJI Mavic 3','DJI Avata 2','FPV','Brevet télépilote'] },
-  { id:'film',   label:'Filmmaker',     cls:'s-film',   icon:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/>',
+  { id:'film',   family:'av', label:'Filmmaker',     cls:'s-film',   icon:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/>',
     gear:['Sony FX3','Sony A7S III','BMPCC 6K','Canon R6','Gimbal DJI RS','Premiere Pro','DaVinci Resolve'] },
-  { id:'montage', label:'Monteur vidéo', cls:'s-montage', icon:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/>',
+  { id:'montage', family:'av', label:'Monteur vidéo', cls:'s-montage', icon:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/>',
     gear:['Premiere Pro','Final Cut Pro','DaVinci Resolve','After Effects','CapCut'] },
-  { id:'color',  label:'Coloriste / étalonneur', cls:'s-color', icon:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/>',
+  { id:'color',  family:'av', label:'Coloriste / étalonneur', cls:'s-color', icon:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/>',
     gear:['DaVinci Resolve Studio','Baselight','Panneau Tangent','Écran calibré','Sonde de calibration','LUTs'] },
-  { id:'son',    label:'Ingénieur du son', cls:'s-son', icon:'<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
+  { id:'son',    family:'av', label:'Ingénieur du son', cls:'s-son', icon:'<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
     gear:['Pro Tools','Ableton Live','Logic Pro','Reaper','Zoom H6','Rode NTG','Micros HF Sennheiser'] },
-  { id:'photo',  label:'Photographe',   cls:'s-photo',  icon:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+  { id:'photo',  family:'av', label:'Photographe',   cls:'s-photo',  icon:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
     gear:['Sony A7 IV','Canon R5','Nikon Z6','Fujifilm X-T5','Flash Godox','Lightroom','Studio'] },
-  { id:'web',    label:'Web design',    cls:'s-web',    icon:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 6.5h.01M9 6.5h.01"/>',
+  { id:'web',    family:'design', label:'Web design',    cls:'s-web',    icon:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 6.5h.01M9 6.5h.01"/>',
     gear:['Figma','Webflow','Framer','WordPress','Photoshop'] },
-  { id:'ui',     label:'UI designer',   cls:'s-ui',     icon:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
+  { id:'ui',     family:'design', label:'UI designer',   cls:'s-ui',     icon:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
     gear:['Figma','Framer','Adobe XD','ProtoPie','Design system'] },
-  { id:'graph',  label:'Graphiste',     cls:'s-graph',  icon:'<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.6 7.6"/><circle cx="11" cy="11" r="2"/>',
+  { id:'graph',  family:'design', label:'Graphiste',     cls:'s-graph',  icon:'<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.6 7.6"/><circle cx="11" cy="11" r="2"/>',
     gear:['Illustrator','Photoshop','InDesign','Affinity Designer','Canva'] },
-  { id:'illu',   label:'Illustrateur',  cls:'s-illu',   icon:'<path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/><path d="M15 5l4 4"/>',
+  { id:'illu',   family:'design', label:'Illustrateur',  cls:'s-illu',   icon:'<path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/><path d="M15 5l4 4"/>',
     gear:['Procreate','iPad Pro','Tablette Wacom','Clip Studio Paint','Illustrator'] },
-  { id:'motion', label:'Motion design', cls:'s-motion', icon:'<path d="M3 12c3-6 6-6 9 0s6 6 9 0"/><circle cx="12" cy="12" r="1.5"/>',
+  { id:'motion', family:'design', label:'Motion design', cls:'s-motion', icon:'<path d="M3 12c3-6 6-6 9 0s6 6 9 0"/><circle cx="12" cy="12" r="1.5"/>',
     gear:['After Effects','Cinema 4D','Rive','Lottie','Illustrator'] },
-  { id:'mini',   label:'Miniamaker',     cls:'s-mini',   icon:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M10 9l5 3-5 3z"/>',
+  { id:'mini',   family:'design', label:'Miniamaker',     cls:'s-mini',   icon:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M10 9l5 3-5 3z"/>',
     gear:['Photoshop','Canva','Figma','Midjourney','Tablette graphique'] },
-  { id:'3d',     label:'3D',            cls:'s-3d',     icon:'<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/>',
+  { id:'3d',     family:'design', label:'3D',            cls:'s-3d',     icon:'<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/>',
     gear:['Blender','Cinema 4D','Maya','Unreal Engine','Substance Painter','ZBrush'] },
-  { id:'cm',     label:'Community manager', cls:'s-cm', icon:'<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4-.9L3 20l1.1-4A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/>',
+  { id:'cm',     family:'mkt', label:'Community manager', cls:'s-cm', icon:'<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4-.9L3 20l1.1-4A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/>',
     gear:['Meta Business Suite','Canva','CapCut','Metricool','Notion','TikTok Studio'] },
-  { id:'copy',   label:'Copywriter',    cls:'s-copy',   icon:'<path d="M4 7V4h16v3M9 20h6M12 4v16"/>',
+  { id:'copy',   family:'mkt', label:'Copywriter',    cls:'s-copy',   icon:'<path d="M4 7V4h16v3M9 20h6M12 4v16"/>',
     gear:['Notion','Google Docs','Antidote','Semrush','ChatGPT'] },
-  { id:'drop',   label:'Dropshipper',   cls:'s-drop',   icon:'<path d="M1 4h13v12H1zM14 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/>',
+  { id:'drop',   family:'mkt', label:'Dropshipper',   cls:'s-drop',   icon:'<path d="M1 4h13v12H1zM14 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/>',
     gear:['Shopify','AutoDS','DSers','CJ Dropshipping','Minea','Meta Ads'] },
-  { id:'ecom',   label:'E-commerce',    cls:'s-ecom',   icon:'<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/>',
+  { id:'ecom',   family:'mkt', label:'E-commerce',    cls:'s-ecom',   icon:'<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/>',
     gear:['Shopify','WooCommerce','PrestaShop','Klaviyo','Google Ads','Stripe'] },
 ];
 
@@ -636,7 +659,7 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt
 function norm(s){ return String(s ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); }
 
 let { members, me } = store.load();
-const state = { q:'', tab:'', exp:'', mat:'', where:null, radiusIdx:4, remote:true };
+const state = { q:'', tab:'', spec:'', exp:'', mat:'', where:null, radiusIdx:4, remote:true };
 
 const specById = Object.fromEntries(SPECIALTIES.map(s => [s.id, s]));
 const svg = (paths, cls='i') => `<svg class="${cls}" viewBox="0 0 24 24">${paths}</svg>`;
@@ -656,12 +679,15 @@ function geoMatch(m){
   return null;
 }
 
+const inFamily = (m, fam) => m.specs.some(id => specById[id]?.family === fam);
+
 function filtered({ ignoreTab=false } = {}){
   const q = norm(state.q).trim();
   const expTest = EXP_RANGES.find(r => r.id === state.exp).test;
   const out = [];
   for (const m of members){
-    if (!ignoreTab && state.tab && !m.specs.includes(state.tab)) continue;
+    if (!ignoreTab && state.tab && !inFamily(m, state.tab)) continue;
+    if (!ignoreTab && state.spec && !m.specs.includes(state.spec)) continue;
     if (!expTest(m.years)) continue;
     if (state.mat && !m.gear.some(g => norm(g) === norm(state.mat))) continue;
     if (q){
@@ -681,12 +707,25 @@ function filtered({ ignoreTab=false } = {}){
 
 function renderTabs(){
   const base = filtered({ ignoreTab:true });
-  const tabs = [{ id:'', label:'Tous', icon:null }, ...SPECIALTIES];
+  const tabs = [{ id:'', label:'Tous', icon:null }, ...FAMILIES];
   $('#tabs').innerHTML = tabs.map(t => {
-    const n = t.id ? base.filter(r => r.m.specs.includes(t.id)).length : base.length;
+    const n = t.id ? base.filter(r => inFamily(r.m, t.id)).length : base.length;
     return `<button class="tab" role="tab" data-tab="${t.id}" aria-selected="${state.tab === t.id}">
       ${t.icon ? svg(t.icon) : ''}${esc(t.label)}<span class="n">${n}</span></button>`;
   }).join('');
+
+  // Pastilles : les spécialités de la famille choisie
+  const pills = $('#pills');
+  pills.hidden = !state.tab;
+  if (!state.tab){ pills.innerHTML = ''; return; }
+  const specs = SPECIALTIES.filter(s => s.family === state.tab);
+  const famN = base.filter(r => inFamily(r.m, state.tab)).length;
+  pills.innerHTML = `<button class="pill" data-spec="" aria-pressed="${!state.spec}">Toutes<span class="n">${famN}</span></button>` +
+    specs.map(s => {
+      const n = base.filter(r => r.m.specs.includes(s.id)).length;
+      const on = state.spec === s.id;
+      return `<button class="pill ${s.cls}" data-spec="${s.id}" aria-pressed="${on}"${!n && !on ? ' disabled' : ''}>${svg(s.icon)}${esc(s.label)}<span class="n">${n}</span></button>`;
+    }).join('');
 }
 
 function renderSelects(){
@@ -741,7 +780,7 @@ function renderMeta(){
   $('#btnMe').textContent = me ? 'Modifier ma fiche' : '+ Créer ma fiche';
   $('#qClear').style.display = state.q ? 'block' : 'none';
   $('#wRadiusVal').textContent = fmtKm(SEARCH_STOPS[state.radiusIdx]);
-  const any = state.q || state.exp || state.mat || state.where || state.tab;
+  const any = state.q || state.exp || state.mat || state.where || state.tab || state.spec;
   $('#reset').style.display = any ? 'inline-block' : 'none';
   $('#wrapExp').classList.toggle('on', !!state.exp);
   $('#wrapMat').classList.toggle('on', !!state.mat);
@@ -753,7 +792,12 @@ function render(){ renderTabs(); renderGrid(); renderMeta(); }
 /* ---------- Événements liste ---------- */
 $('#q').addEventListener('input', e => { state.q = e.target.value; render(); });
 $('#qClear').addEventListener('click', () => { state.q = ''; $('#q').value = ''; render(); $('#q').focus(); });
-$('#tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (!b) return; state.tab = b.dataset.tab; render(); });
+$('#tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (!b) return; state.tab = b.dataset.tab; state.spec = ''; render(); });
+$('#pills').addEventListener('click', e => {
+  const b = e.target.closest('[data-spec]'); if (!b || b.disabled) return;
+  state.spec = state.spec === b.dataset.spec ? '' : b.dataset.spec;   // re-cliquer désélectionne
+  render();
+});
 $('#fExp').addEventListener('change', e => { state.exp = e.target.value; render(); });
 $('#fMat').addEventListener('change', e => { state.mat = e.target.value; render(); });
 
@@ -774,7 +818,7 @@ $('#wLocate').addEventListener('click', () => {
 });
 
 $('#reset').addEventListener('click', () => {
-  Object.assign(state, { q:'', tab:'', exp:'', mat:'', where:null });
+  Object.assign(state, { q:'', tab:'', spec:'', exp:'', mat:'', where:null });
   $('#q').value = ''; $('#wCity').value = '';
   renderSelects(); render();
 });
@@ -811,8 +855,11 @@ function openForm(){
 function closeForm(){ document.body.classList.remove('open'); draft = null; }
 
 function renderFormChoices(){
-  $('#fSpecs').innerHTML = SPECIALTIES.map(s =>
-    `<button type="button" class="choice spec-choice ${s.cls}" data-spec="${s.id}" aria-pressed="${draft.specs.includes(s.id)}">${svg(s.icon)}${esc(s.label)}</button>`).join('');
+  $('#fSpecs').innerHTML = FAMILIES.map(f =>
+    `<div class="fam-title">${esc(f.label)}</div><div class="choices">` +
+    SPECIALTIES.filter(s => s.family === f.id).map(s =>
+      `<button type="button" class="choice spec-choice ${s.cls}" data-spec="${s.id}" aria-pressed="${draft.specs.includes(s.id)}">${svg(s.icon)}${esc(s.label)}</button>`).join('') +
+    `</div>`).join('');
   renderGear();
 }
 
