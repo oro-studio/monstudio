@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pages jaunes — VK Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0b;
+  --surface:#131314;
+  --surface-2:#1a1a1c;
+  --border:#262628;
+  --border-strong:#34343a;
+  --text:#f4f4f5;
+  --muted:#a1a1aa;
+  --faint:#71717a;
+  --accent:#4f46e5;
+  --accent-hi:#6366f1;
+  --accent-soft:rgba(99,102,241,.14);
+  --accent-border:rgba(129,140,248,.45);
+  --lavender:#a5b4fc;
+  --radius:18px;
+  --radius-sm:14px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+svg.i{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ---------- Header (reprend la barre VK Studio) ---------- */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:14px;
+  padding:12px 16px;background:rgba(18,18,20,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.topbar .burger{background:none;border:0;color:var(--lavender);padding:6px;display:flex}
+.topbar h1{font-size:18px;font-weight:700;margin:0;flex:1}
+.icon-btn{
+  width:44px;height:44px;border-radius:14px;display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text);
+}
+
+/* ---------- Layout ---------- */
+main{max-width:1180px;margin:0 auto;padding:24px 16px 96px}
+.head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.head h2{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:0}
+.head p{margin:6px 0 0;color:var(--muted);font-size:16px}
+
+.banner{
+  display:flex;gap:12px;align-items:flex-start;margin:20px 0 0;
+  padding:14px 16px;border-radius:var(--radius-sm);
+  background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--lavender);
+}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 18px;
+  border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);
+  font-weight:600;white-space:nowrap;
+}
+.btn:hover{border-color:var(--border-strong)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 8px 28px -10px rgba(79,70,229,.8)}
+.btn-primary:hover{background:var(--accent-hi);border-color:var(--accent-hi)}
+.btn-ghost{background:transparent}
+
+/* ---------- Stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:22px 0 0}
+.stat{
+  display:flex;align-items:center;gap:12px;padding:14px 16px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);
+}
+.stat span{color:var(--muted)}
+.stat b{font-size:18px;margin-left:2px}
+.stat svg{color:var(--muted)}
+.stat.new svg{color:var(--accent-hi)}
+
+/* ---------- Recherche ---------- */
+.search{
+  position:relative;margin:22px 0 0;
+}
+.search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--faint)}
+.search input{
+  width:100%;height:52px;padding:0 44px 0 48px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;
+}
+.search input:focus{border-color:var(--accent-border);box-shadow:0 0 0 3px var(--accent-soft)}
+.search .clear{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  background:none;border:0;color:var(--faint);padding:8px;display:none;
+}
+
+/* ---------- Onglets spécialités (façon Fil / Disponibilités / To-do) ---------- */
+.tabs{
+  display:flex;gap:4px;margin:16px 0 0;padding:6px;overflow-x:auto;scrollbar-width:none;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  display:inline-flex;align-items:center;gap:8px;flex:none;
+  height:44px;padding:0 14px;border-radius:12px;border:1px solid transparent;
+  background:none;color:var(--muted);font-weight:500;
+}
+.tab:hover{color:var(--text)}
+.tab .n{font-size:12px;color:var(--faint);background:var(--surface-2);padding:1px 7px;border-radius:99px}
+.tab[aria-selected="true"]{background:var(--accent-soft);border-color:var(--accent-border);color:var(--lavender)}
+.tab[aria-selected="true"] .n{background:rgba(99,102,241,.25);color:var(--lavender)}
+
+/* ---------- Filtres ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0;align-items:center}
+.select{position:relative}
+.select select{
+  appearance:none;height:44px;padding:0 38px 0 40px;min-width:170px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;
+}
+.select select:focus{border-color:var(--accent-border)}
+.select .lead{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;width:18px;height:18px}
+.select .chev{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;width:16px;height:16px}
+.select.on select{border-color:var(--accent-border);background:var(--accent-soft);color:var(--lavender)}
+.reset{background:none;border:0;color:var(--lavender);font-weight:500;padding:8px;display:none}
+.count{margin:18px 0 12px;color:var(--muted);font-size:14px}
+
+/* ---------- Cartes membres ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.card{
+  display:flex;flex-direction:column;gap:14px;padding:18px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+}
+.card:hover{border-color:var(--border-strong)}
+.card.me{border-color:var(--accent-border)}
+.who{display:flex;gap:12px;align-items:center}
+.avatar{
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;flex:none;
+  font-weight:700;color:#fff;background:linear-gradient(135deg,#4f46e5,#7c3aed);
+}
+.who h3{margin:0;font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.who .loc{color:var(--muted);font-size:13px;display:flex;align-items:center;gap:4px;margin-top:2px}
+.who .loc svg{width:14px;height:14px}
+.pill-me{font-size:11px;font-weight:600;color:var(--lavender);background:var(--accent-soft);border:1px solid var(--accent-border);padding:1px 8px;border-radius:99px}
+.exp{margin-left:auto;text-align:right;flex:none}
+.exp b{display:block;font-size:20px;line-height:1}
+.exp small{color:var(--faint);font-size:12px}
+
+.specs{display:flex;flex-wrap:wrap;gap:6px}
+.spec{
+  display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:99px;
+  font-size:13px;font-weight:600;border:1px solid;
+}
+.spec svg{width:14px;height:14px}
+.bio{margin:0;color:var(--muted);font-size:14px}
+.row-label{font-size:12px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:13px;padding:4px 10px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);color:#d4d4d8}
+.tag.hit{border-color:var(--accent-border);color:var(--lavender)}
+.card .foot{display:flex;gap:8px;margin-top:auto}
+.card .foot .btn{height:40px;flex:1;justify-content:center;font-size:14px}
+
+.empty{
+  text-align:center;padding:48px 16px;color:var(--muted);
+  background:var(--surface);border:1px dashed var(--border-strong);border-radius:var(--radius);
+}
+.empty b{display:block;color:var(--text);font-size:17px;margin-bottom:6px}
+
+/* ---------- Couleurs par spécialité ---------- */
+.s-drone  {--c:#38bdf8}
+.s-film   {--c:#f87171}
+.s-photo  {--c:#fbbf24}
+.s-web    {--c:#34d399}
+.s-motion {--c:#c084fc}
+.s-mini   {--c:#fb923c}
+.s-3d     {--c:#818cf8}
+.spec{color:var(--c);border-color:color-mix(in srgb,var(--c) 40%,transparent);background:color-mix(in srgb,var(--c) 12%,transparent)}
+
+/* ---------- Formulaire (panneau) ---------- */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none}
+.sheet{
+  position:fixed;z-index:41;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(620px,calc(100% - 24px));max-height:calc(100dvh - 32px);overflow:auto;
+  background:var(--surface);border:1px solid var(--border-strong);border-radius:22px;padding:22px;display:none;
+}
+.open .sheet-bg,.open .sheet{display:block}
+.sheet h3{margin:0 0 4px;font-size:22px}
+.sheet .sub{margin:0 0 18px;color:var(--muted)}
+.field{margin:0 0 16px}
+.field label,.field .lbl{display:block;font-weight:600;margin-bottom:8px;font-size:14px}
+.field .hint{color:var(--faint);font-weight:400}
+.input{
+  width:100%;height:46px;padding:0 14px;background:var(--bg);border:1px solid var(--border);
+  border-radius:12px;outline:none;
+}
+textarea.input{height:auto;min-height:80px;padding:12px 14px;resize:vertical}
+.input:focus{border-color:var(--accent-border);box-shadow:0 0 0 3px var(--accent-soft)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choice{
+  height:38px;padding:0 12px;border-radius:12px;background:var(--bg);border:1px solid var(--border);
+  color:var(--muted);font-weight:500;display:inline-flex;align-items:center;gap:6px;
+}
+.choice[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent-border);color:var(--lavender)}
+.choice.spec-choice[aria-pressed="true"]{color:var(--c);border-color:color-mix(in srgb,var(--c) 50%,transparent);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.choice svg{width:16px;height:16px}
+.taginput{
+  display:flex;flex-wrap:wrap;gap:6px;padding:8px;min-height:46px;
+  background:var(--bg);border:1px solid var(--border);border-radius:12px;
+}
+.taginput:focus-within{border-color:var(--accent-border)}
+.taginput input{flex:1;min-width:140px;border:0;outline:none;background:none;height:30px;padding:0 6px}
+.taginput .tag{display:inline-flex;align-items:center;gap:6px}
+.taginput .tag button{background:none;border:0;color:var(--faint);padding:0;line-height:1}
+.suggest{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.suggest button{font-size:12px;padding:3px 9px;border-radius:99px;border:1px dashed var(--border-strong);background:none;color:var(--muted)}
+.suggest button:hover{color:var(--lavender);border-color:var(--accent-border)}
+.sheet .actions{display:flex;gap:10px;justify-content:space-between;margin-top:22px;flex-wrap:wrap}
+.sheet .actions .right{display:flex;gap:10px;margin-left:auto}
+.danger{color:#f87171}
+.err{color:#f87171;font-size:13px;margin-top:6px;display:none}
+
+.toast{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);opacity:0;
+  background:var(--surface-2);border:1px solid var(--border-strong);padding:12px 18px;border-radius:14px;
+  transition:.2s;z-index:60;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:640px){
+  .head h2{font-size:26px}
+  .head .btn-primary{width:100%;justify-content:center}
+  .filters .select{flex:1 1 100%}
+  .filters .select select{width:100%}
+  .two{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+  .sheet{top:auto;bottom:0;left:0;transform:none;width:100%;max-height:92dvh;border-radius:22px 22px 0 0}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="burger" aria-label="Menu"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <h1>Pages jaunes</h1>
+  <button class="icon-btn" id="btnMeTop" aria-label="Ma fiche"><svg class="i" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+</header>
+
+<main>
+  <section class="head">
+    <div>
+      <h2>Pages jaunes</h2>
+      <p>Trouve le bon profil dans la communauté pour ton prochain projet.</p>
+    </div>
+    <button class="btn btn-primary" id="btnMe">+ Créer ma fiche</button>
+  </section>
+
+  <div class="banner">
+    <svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+    <div>Renseigne tes spécialités, ton matériel, ton expérience et ta zone de déplacement pour être trouvé par les autres membres.</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><svg class="i" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>Profils</span><b id="stTotal">0</b></div>
+    <div class="stat"><svg class="i" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg><span>Zones</span><b id="stZones">0</b></div>
+    <div class="stat new"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l1.8 4.9L19 9.7l-5.2 1.8L12 16.4l-1.8-4.9L5 9.7l5.2-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span>Nouveaux</span><b id="stNew">0</b></div>
+  </div>
+
+  <div class="search">
+    <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Rechercher un nom, une ville, du matériel…" autocomplete="off">
+    <button class="clear" id="qClear" aria-label="Effacer"><svg class="i" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+  </div>
+
+  <nav class="tabs" id="tabs" role="tablist"></nav>
+
+  <div class="filters">
+    <div class="select" id="wrapExp">
+      <svg class="i lead" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <select id="fExp" aria-label="Années d'expérience"></select>
+      <svg class="i chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="select" id="wrapMat">
+      <svg class="i lead" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      <select id="fMat" aria-label="Matériel"></select>
+      <svg class="i chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="select" id="wrapZone">
+      <svg class="i lead" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <select id="fZone" aria-label="Zone géographique"></select>
+      <svg class="i chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <button class="reset" id="reset">Réinitialiser</button>
+  </div>
+
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- Formulaire "Ma fiche" -->
+<div id="sheetRoot">
+  <div class="sheet-bg" id="sheetBg"></div>
+  <form class="sheet" id="form" novalidate>
+    <h3 id="formTitle">Ma fiche</h3>
+    <p class="sub">Ces infos sont visibles par tous les membres de la communauté.</p>
+
+    <div class="two">
+      <div class="field">
+        <label for="fName">Nom / pseudo</label>
+        <input class="input" id="fName" required maxlength="40" placeholder="Ex. Léa Martin">
+      </div>
+      <div class="field">
+        <label for="fDiscord">Discord <span class="hint">(pour être contacté)</span></label>
+        <input class="input" id="fDiscord" maxlength="40" placeholder="Ex. lea.films">
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="lbl">Spécialités <span class="hint">(une ou plusieurs)</span></span>
+      <div class="choices" id="fSpecs"></div>
+      <div class="err" id="errSpecs">Choisis au moins une spécialité.</div>
+    </div>
+
+    <div class="two">
+      <div class="field">
+        <label for="fYears">Années d'expérience</label>
+        <input class="input" id="fYears" type="number" min="0" max="50" step="1" placeholder="0" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="fCity">Ville de base</label>
+        <input class="input" id="fCity" maxlength="50" placeholder="Ex. Toulouse">
+      </div>
+    </div>
+
+    <div class="field">
+      <span class="lbl">Matériel <span class="hint">(Entrée pour ajouter)</span></span>
+      <div class="taginput" id="matBox"><input id="matInput" placeholder="Ex. DJI Mini 4 Pro, Sony A7 IV, Blender…"></div>
+      <div class="suggest" id="matSuggest"></div>
+    </div>
+
+    <div class="field">
+      <span class="lbl">Zones de déplacement</span>
+      <div class="choices" id="fZones"></div>
+    </div>
+
+    <div class="field">
+      <label for="fBio">Présentation <span class="hint">(optionnel)</span></label>
+      <textarea class="input" id="fBio" maxlength="240" placeholder="En deux phrases : ce que tu fais, ce que tu cherches…"></textarea>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-ghost danger" id="btnDelete">Supprimer ma fiche</button>
+      <div class="right">
+        <button type="button" class="btn" id="btnCancel">Annuler</button>
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   CONFIG — pour ajouter une spécialité : une ligne dans SPECIALTIES
+   (+ une couleur .s-xxx dans le CSS si tu veux une teinte dédiée).
+   ===================================================================== */
+const SPECIALTIES = [
+  { id:'drone',  label:'Droniste',      cls:'s-drone',  icon:'<path d="M5 5h3M16 5h3M6.5 5v3M17.5 5v3"/><rect x="9" y="9" width="6" height="5" rx="1.5"/><path d="M6.5 8L9 10M17.5 8L15 10M10 14l-1.5 3M14 14l1.5 3"/>',
+    gear:['DJI Mini 4 Pro','DJI Air 3','DJI Mavic 3','DJI Avata 2','FPV','Brevet télépilote'] },
+  { id:'film',   label:'Filmmaker',     cls:'s-film',   icon:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/>',
+    gear:['Sony FX3','Sony A7S III','BMPCC 6K','Canon R6','Gimbal DJI RS','Premiere Pro','DaVinci Resolve'] },
+  { id:'photo',  label:'Photographe',   cls:'s-photo',  icon:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+    gear:['Sony A7 IV','Canon R5','Nikon Z6','Fujifilm X-T5','Flash Godox','Lightroom','Studio'] },
+  { id:'web',    label:'Web design',    cls:'s-web',    icon:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 6.5h.01M9 6.5h.01"/>',
+    gear:['Figma','Webflow','Framer','WordPress','Photoshop'] },
+  { id:'motion', label:'Motion design', cls:'s-motion', icon:'<path d="M3 12c3-6 6-6 9 0s6 6 9 0"/><circle cx="12" cy="12" r="1.5"/>',
+    gear:['After Effects','Cinema 4D','Rive','Lottie','Illustrator'] },
+  { id:'mini',   label:'Miniaturiste',  cls:'s-mini',   icon:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M10 9l5 3-5 3z"/>',
+    gear:['Photoshop','Canva','Figma','Midjourney','Tablette graphique'] },
+  { id:'3d',     label:'3D',            cls:'s-3d',     icon:'<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/>',
+    gear:['Blender','Cinema 4D','Maya','Unreal Engine','Substance Painter','ZBrush'] },
+];
+
+const ZONES = [
+  'Toute la France','Andorre','Île-de-France','Occitanie','Nouvelle-Aquitaine','Auvergne-Rhône-Alpes',
+  "Provence-Alpes-Côte d'Azur",'Grand Est','Hauts-de-France','Normandie','Bretagne','Pays de la Loire',
+  'Centre-Val de Loire','Bourgogne-Franche-Comté','Corse','DOM-TOM','Belgique','Suisse','Espagne','International','À distance'
+];
+const FRANCE_REGIONS = ZONES.slice(2, 16);
+
+const EXP_RANGES = [
+  { id:'',    label:"Toute expérience", test:()=>true },
+  { id:'0-1', label:"Moins d'1 an",     test:y=>y<1 },
+  { id:'1-3', label:'1 à 3 ans',        test:y=>y>=1 && y<=3 },
+  { id:'3-5', label:'3 à 5 ans',        test:y=>y>3 && y<=5 },
+  { id:'5+',  label:'Plus de 5 ans',    test:y=>y>5 },
+];
+
+/* =====================================================================
+   DONNÉES — couche isolée : pour brancher sur l'intranet, remplacer
+   store.load / store.save par des appels à l'API du site.
+   ===================================================================== */
+const DEMO = [
+  { id:'d1', name:'Léa Martin',      discord:'lea.films',   city:'Toulouse',   years:4, specs:['film','drone'],  gear:['Sony FX3','DJI Air 3','DaVinci Resolve'], zones:['Occitanie','Andorre'], bio:'Clips et films de mariage, prises de vue aériennes.', created:Date.now()-2*864e5 },
+  { id:'d2', name:'Hugo Pereira',    discord:'hugo3d',      city:'Lyon',       years:6, specs:['3d','motion'],   gear:['Blender','Cinema 4D','After Effects'],    zones:['À distance','Auvergne-Rhône-Alpes'], bio:'Packshots 3D et animations produit.', created:Date.now()-40*864e5 },
+  { id:'d3', name:'Inès Bouaziz',    discord:'ines.clic',   city:'Andorre-la-Vieille', years:2, specs:['photo'],  gear:['Canon R6','Lightroom','Flash Godox'],     zones:['Andorre','Occitanie','Espagne'], bio:'Portrait, événementiel et immobilier.', created:Date.now()-5*864e5 },
+  { id:'d4', name:'Nathan Leroy',    discord:'nath.thumbs', city:'Paris',      years:1, specs:['mini','web'],    gear:['Photoshop','Figma'],                      zones:['À distance'], bio:'Miniatures YouTube qui cliquent.', created:Date.now()-60*864e5 },
+  { id:'d5', name:'Sarah Dumont',    discord:'sarah.fpv',   city:'Bordeaux',   years:8, specs:['drone','film','photo'], gear:['DJI Avata 2','FPV','Brevet télépilote','Sony A7S III'], zones:['Toute la France','Belgique'], bio:'Pilote FPV certifiée, tournages pub et immobilier.', created:Date.now()-90*864e5 },
+  { id:'d6', name:'Mehdi Karim',     discord:'mehdi.motion',city:'Marseille',  years:0.5, specs:['motion','mini'], gear:['After Effects','Illustrator','Canva'], zones:["Provence-Alpes-Côte d'Azur",'À distance'], bio:'', created:Date.now()-1*864e5 },
+];
+
+const KEY_ME = 'vk-pj-me';
+const store = {
+  load(){
+    let me = null;
+    try { me = JSON.parse(localStorage.getItem(KEY_ME) || 'null'); } catch(e){}
+    return { members: me ? [me, ...DEMO] : DEMO.slice(), me };
+  },
+  saveMe(profile){ try { localStorage.setItem(KEY_ME, JSON.stringify(profile)); } catch(e){} },
+  deleteMe(){ try { localStorage.removeItem(KEY_ME); } catch(e){} },
+};
+
+/* ===================================================================== */
+let { members, me } = store.load();
+const state = { q:'', tab:'', exp:'', mat:'', zone:'' };
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s ?? '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const specById = Object.fromEntries(SPECIALTIES.map(s => [s.id, s]));
+const svg = (paths, cls='i') => `<svg class="${cls}" viewBox="0 0 24 24">${paths}</svg>`;
+const initials = n => n.split(/\s+/).filter(Boolean).slice(0,2).map(w => w[0]).join('').toUpperCase() || '?';
+const fmtYears = y => y < 1 ? '<1' : String(Math.round(y));
+
+function zoneMatches(m, zone){
+  if (!zone) return true;
+  if (m.zones.includes(zone)) return true;
+  // "Toute la France" couvre chaque région française
+  return FRANCE_REGIONS.includes(zone) && m.zones.includes('Toute la France');
+}
+
+function filtered({ ignoreTab=false } = {}){
+  const q = norm(state.q).trim();
+  const expTest = EXP_RANGES.find(r => r.id === state.exp).test;
+  return members.filter(m => {
+    if (!ignoreTab && state.tab && !m.specs.includes(state.tab)) return false;
+    if (!expTest(m.years)) return false;
+    if (state.mat && !m.gear.some(g => norm(g) === norm(state.mat))) return false;
+    if (!zoneMatches(m, state.zone)) return false;
+    if (q){
+      const hay = norm([m.name, m.city, m.discord, m.bio, ...m.gear, ...m.zones, ...m.specs.map(s => specById[s]?.label)].join(' '));
+      if (!q.split(/\s+/).every(w => hay.includes(w))) return false;
+    }
+    return true;
+  });
+}
+
+function renderTabs(){
+  const base = filtered({ ignoreTab:true });
+  const tabs = [{ id:'', label:'Tous', icon:null }, ...SPECIALTIES];
+  $('#tabs').innerHTML = tabs.map(t => {
+    const n = t.id ? base.filter(m => m.specs.includes(t.id)).length : base.length;
+    return `<button class="tab" role="tab" data-tab="${t.id}" aria-selected="${state.tab === t.id}">
+      ${t.icon ? svg(t.icon) : ''}${esc(t.label)}<span class="n">${n}</span></button>`;
+  }).join('');
+}
+
+function renderSelects(){
+  $('#fExp').innerHTML = EXP_RANGES.map(r => `<option value="${r.id}">${esc(r.label)}</option>`).join('');
+  $('#fExp').value = state.exp;
+
+  const gear = [...new Map(members.flatMap(m => m.gear).map(g => [norm(g), g])).values()].sort((a,b) => a.localeCompare(b,'fr'));
+  $('#fMat').innerHTML = `<option value="">Tout matériel</option>` + gear.map(g => `<option>${esc(g)}</option>`).join('');
+  $('#fMat').value = state.mat;
+
+  $('#fZone').innerHTML = `<option value="">Toutes les zones</option>` + ZONES.map(z => `<option>${esc(z)}</option>`).join('');
+  $('#fZone').value = state.zone;
+}
+
+function renderGrid(){
+  const list = filtered();
+  const qn = norm(state.q);
+  $('#count').textContent = `${list.length} profil${list.length > 1 ? 's' : ''}`;
+  $('#grid').innerHTML = list.length ? list.map(m => {
+    const isMe = me && m.id === me.id;
+    return `<article class="card${isMe ? ' me' : ''}">
+      <div class="who">
+        <div class="avatar">${esc(initials(m.name))}</div>
+        <div>
+          <h3>${esc(m.name)}${isMe ? '<span class="pill-me">Toi</span>' : ''}</h3>
+          ${m.city ? `<div class="loc">${svg('<path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>')}${esc(m.city)}</div>` : ''}
+        </div>
+        <div class="exp"><b>${fmtYears(m.years)}</b><small>an${m.years >= 2 ? 's' : ''} d'exp.</small></div>
+      </div>
+      <div class="specs">${m.specs.map(id => { const s = specById[id]; return s ? `<span class="spec ${s.cls}">${svg(s.icon)}${esc(s.label)}</span>` : ''; }).join('')}</div>
+      ${m.bio ? `<p class="bio">${esc(m.bio)}</p>` : ''}
+      ${m.gear.length ? `<div><div class="row-label">Matériel</div><div class="tags">${m.gear.map(g => `<span class="tag${(state.mat && norm(g) === norm(state.mat)) || (qn && norm(g).includes(qn)) ? ' hit' : ''}">${esc(g)}</span>`).join('')}</div></div>` : ''}
+      ${m.zones.length ? `<div><div class="row-label">Se déplace</div><div class="tags">${m.zones.map(z => `<span class="tag${state.zone === z ? ' hit' : ''}">${esc(z)}</span>`).join('')}</div></div>` : ''}
+      <div class="foot">
+        ${isMe
+          ? `<button class="btn" data-edit>Modifier ma fiche</button>`
+          : m.discord ? `<button class="btn" data-copy="${esc(m.discord)}">${svg('<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>')}Discord : ${esc(m.discord)}</button>` : ''}
+      </div>
+    </article>`;
+  }).join('') : `<div class="empty"><b>Aucun profil ne correspond</b>Essaie d'élargir la recherche ou de retirer un filtre.</div>`;
+}
+
+function renderMeta(){
+  $('#stTotal').textContent = members.length;
+  $('#stZones').textContent = new Set(members.flatMap(m => m.zones)).size;
+  $('#stNew').textContent = members.filter(m => Date.now() - (m.created || 0) < 7*864e5).length;
+  const label = me ? 'Modifier ma fiche' : '+ Créer ma fiche';
+  $('#btnMe').textContent = label;
+  $('#qClear').style.display = state.q ? 'block' : 'none';
+  const any = state.q || state.exp || state.mat || state.zone || state.tab;
+  $('#reset').style.display = any ? 'inline-block' : 'none';
+  $('#wrapExp').classList.toggle('on', !!state.exp);
+  $('#wrapMat').classList.toggle('on', !!state.mat);
+  $('#wrapZone').classList.toggle('on', !!state.zone);
+}
+
+function render(){ renderTabs(); renderGrid(); renderMeta(); }
+
+/* ---------- Événements liste ---------- */
+$('#q').addEventListener('input', e => { state.q = e.target.value; render(); });
+$('#qClear').addEventListener('click', () => { state.q = ''; $('#q').value = ''; render(); $('#q').focus(); });
+$('#tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (!b) return; state.tab = b.dataset.tab; render(); });
+$('#fExp').addEventListener('change', e => { state.exp = e.target.value; render(); });
+$('#fMat').addEventListener('change', e => { state.mat = e.target.value; render(); });
+$('#fZone').addEventListener('change', e => { state.zone = e.target.value; render(); });
+$('#reset').addEventListener('click', () => {
+  Object.assign(state, { q:'', tab:'', exp:'', mat:'', zone:'' });
+  $('#q').value = ''; renderSelects(); render();
+});
+$('#grid').addEventListener('click', e => {
+  const c = e.target.closest('[data-copy]');
+  if (c){
+    const v = c.dataset.copy;
+    (navigator.clipboard?.writeText(v) || Promise.reject()).then(() => toast(`Pseudo Discord copié : ${v}`), () => toast(`Discord : ${v}`));
+    return;
+  }
+  if (e.target.closest('[data-edit]')) openForm();
+});
+
+/* ---------- Formulaire ---------- */
+let draft = null;
+
+function openForm(){
+  draft = me ? structuredClone(me) : { id:'me-' + Date.now(), name:'', discord:'', city:'', years:0, specs:[], gear:[], zones:[], bio:'', created:Date.now() };
+  $('#formTitle').textContent = me ? 'Modifier ma fiche' : 'Créer ma fiche';
+  $('#btnDelete').style.display = me ? 'inline-flex' : 'none';
+  $('#fName').value = draft.name; $('#fDiscord').value = draft.discord; $('#fCity').value = draft.city;
+  $('#fYears').value = me ? draft.years : ''; $('#fBio').value = draft.bio;
+  $('#errSpecs').style.display = 'none';
+  renderFormChoices();
+  document.body.classList.add('open');
+  setTimeout(() => $('#fName').focus(), 50);
+}
+function closeForm(){ document.body.classList.remove('open'); draft = null; }
+
+function renderFormChoices(){
+  $('#fSpecs').innerHTML = SPECIALTIES.map(s =>
+    `<button type="button" class="choice spec-choice ${s.cls}" data-spec="${s.id}" aria-pressed="${draft.specs.includes(s.id)}">${svg(s.icon)}${esc(s.label)}</button>`).join('');
+  $('#fZones').innerHTML = ZONES.map(z =>
+    `<button type="button" class="choice" data-zone="${esc(z)}" aria-pressed="${draft.zones.includes(z)}">${esc(z)}</button>`).join('');
+  renderGear();
+}
+
+function renderGear(){
+  const box = $('#matBox'), input = $('#matInput');
+  box.querySelectorAll('.tag').forEach(t => t.remove());
+  draft.gear.forEach((g, i) => {
+    const t = document.createElement('span');
+    t.className = 'tag';
+    t.innerHTML = `${esc(g)}<button type="button" data-rm="${i}" aria-label="Retirer ${esc(g)}">×</button>`;
+    box.insertBefore(t, input);
+  });
+  // Suggestions selon les spécialités cochées
+  const pool = (draft.specs.length ? draft.specs : SPECIALTIES.map(s => s.id)).flatMap(id => specById[id].gear);
+  const have = new Set(draft.gear.map(norm));
+  const sugg = [...new Set(pool)].filter(g => !have.has(norm(g))).slice(0, 10);
+  $('#matSuggest').innerHTML = sugg.map(g => `<button type="button" data-add="${esc(g)}">+ ${esc(g)}</button>`).join('');
+}
+
+function addGear(v){
+  v = v.trim().replace(/\s+/g,' ');
+  if (!v || draft.gear.some(g => norm(g) === norm(v))) return;
+  draft.gear.push(v.slice(0, 40));
+  renderGear();
+}
+
+$('#fSpecs').addEventListener('click', e => {
+  const b = e.target.closest('[data-spec]'); if (!b) return;
+  const id = b.dataset.spec;
+  draft.specs = draft.specs.includes(id) ? draft.specs.filter(x => x !== id) : [...draft.specs, id];
+  b.setAttribute('aria-pressed', draft.specs.includes(id));
+  $('#errSpecs').style.display = 'none';
+  renderGear();
+});
+$('#fZones').addEventListener('click', e => {
+  const b = e.target.closest('[data-zone]'); if (!b) return;
+  const z = b.dataset.zone;
+  draft.zones = draft.zones.includes(z) ? draft.zones.filter(x => x !== z) : [...draft.zones, z];
+  b.setAttribute('aria-pressed', draft.zones.includes(z));
+});
+$('#matInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ','){ e.preventDefault(); addGear(e.target.value); e.target.value = ''; }
+  else if (e.key === 'Backspace' && !e.target.value && draft.gear.length){ draft.gear.pop(); renderGear(); }
+});
+$('#matInput').addEventListener('blur', e => { if (e.target.value.trim()){ addGear(e.target.value); e.target.value = ''; } });
+$('#matBox').addEventListener('click', e => {
+  const rm = e.target.closest('[data-rm]');
+  if (rm){ draft.gear.splice(+rm.dataset.rm, 1); renderGear(); return; }
+  $('#matInput').focus();
+});
+$('#matSuggest').addEventListener('click', e => { const b = e.target.closest('[data-add]'); if (b) addGear(b.dataset.add); });
+
+$('#form').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = $('#fName').value.trim();
+  if (!name){ $('#fName').focus(); toast('Indique ton nom ou pseudo'); return; }
+  if (!draft.specs.length){ $('#errSpecs').style.display = 'block'; return; }
+  const years = Math.max(0, Math.min(50, parseFloat($('#fYears').value) || 0));
+  Object.assign(draft, {
+    name, years,
+    discord: $('#fDiscord').value.trim(),
+    city: $('#fCity').value.trim(),
+    bio: $('#fBio').value.trim(),
+  });
+  me = draft;
+  store.saveMe(me);
+  members = store.load().members;
+  closeForm(); renderSelects(); render();
+  toast('Fiche enregistrée');
+});
+$('#btnDelete').addEventListener('click', () => {
+  if (!confirm('Supprimer ta fiche des pages jaunes ?')) return;
+  store.deleteMe(); ({ members, me } = store.load());
+  closeForm(); renderSelects(); render(); toast('Fiche supprimée');
+});
+$('#btnCancel').addEventListener('click', closeForm);
+$('#sheetBg').addEventListener('click', closeForm);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && draft) closeForm(); });
+$('#btnMe').addEventListener('click', openForm);
+$('#btnMeTop').addEventListener('click', openForm);
+
+let toastT;
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+renderSelects();
+render();
+</script>
+</body>
+</html>
