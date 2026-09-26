@@ -215,6 +215,13 @@ main{max-width:1180px;margin:0 auto;padding:24px 16px 96px}
 .s-cm     {--c:#f472b6}
 .s-drop   {--c:#2dd4bf}
 .s-ecom   {--c:#a3e635}
+.s-montage{--c:#4ade80}
+.s-color  {--c:#e879f9}
+.s-son    {--c:#60a5fa}
+.s-ui     {--c:#22d3ee}
+.s-graph  {--c:#fb7185}
+.s-illu   {--c:#fde047}
+.s-copy   {--c:#d6d3d1}
 .spec{color:var(--c);border-color:color-mix(in srgb,var(--c) 40%,transparent);background:color-mix(in srgb,var(--c) 12%,transparent)}
 
 /* ---------- Formulaire (panneau) ---------- */
@@ -429,18 +436,32 @@ const SPECIALTIES = [
     gear:['DJI Mini 4 Pro','DJI Air 3','DJI Mavic 3','DJI Avata 2','FPV','Brevet télépilote'] },
   { id:'film',   label:'Filmmaker',     cls:'s-film',   icon:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/>',
     gear:['Sony FX3','Sony A7S III','BMPCC 6K','Canon R6','Gimbal DJI RS','Premiere Pro','DaVinci Resolve'] },
+  { id:'montage', label:'Monteur vidéo', cls:'s-montage', icon:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12"/>',
+    gear:['Premiere Pro','Final Cut Pro','DaVinci Resolve','After Effects','CapCut'] },
+  { id:'color',  label:'Coloriste / étalonneur', cls:'s-color', icon:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/>',
+    gear:['DaVinci Resolve Studio','Baselight','Panneau Tangent','Écran calibré','Sonde de calibration','LUTs'] },
+  { id:'son',    label:'Ingénieur du son', cls:'s-son', icon:'<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
+    gear:['Pro Tools','Ableton Live','Logic Pro','Reaper','Zoom H6','Rode NTG','Micros HF Sennheiser'] },
   { id:'photo',  label:'Photographe',   cls:'s-photo',  icon:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
     gear:['Sony A7 IV','Canon R5','Nikon Z6','Fujifilm X-T5','Flash Godox','Lightroom','Studio'] },
   { id:'web',    label:'Web design',    cls:'s-web',    icon:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 6.5h.01M9 6.5h.01"/>',
     gear:['Figma','Webflow','Framer','WordPress','Photoshop'] },
+  { id:'ui',     label:'UI designer',   cls:'s-ui',     icon:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>',
+    gear:['Figma','Framer','Adobe XD','ProtoPie','Design system'] },
+  { id:'graph',  label:'Graphiste',     cls:'s-graph',  icon:'<path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.6 7.6"/><circle cx="11" cy="11" r="2"/>',
+    gear:['Illustrator','Photoshop','InDesign','Affinity Designer','Canva'] },
+  { id:'illu',   label:'Illustrateur',  cls:'s-illu',   icon:'<path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/><path d="M15 5l4 4"/>',
+    gear:['Procreate','iPad Pro','Tablette Wacom','Clip Studio Paint','Illustrator'] },
   { id:'motion', label:'Motion design', cls:'s-motion', icon:'<path d="M3 12c3-6 6-6 9 0s6 6 9 0"/><circle cx="12" cy="12" r="1.5"/>',
     gear:['After Effects','Cinema 4D','Rive','Lottie','Illustrator'] },
-  { id:'mini',   label:'Miniaturiste',  cls:'s-mini',   icon:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M10 9l5 3-5 3z"/>',
+  { id:'mini',   label:'Miniamaker',     cls:'s-mini',   icon:'<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M10 9l5 3-5 3z"/>',
     gear:['Photoshop','Canva','Figma','Midjourney','Tablette graphique'] },
   { id:'3d',     label:'3D',            cls:'s-3d',     icon:'<path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/>',
     gear:['Blender','Cinema 4D','Maya','Unreal Engine','Substance Painter','ZBrush'] },
   { id:'cm',     label:'Community manager', cls:'s-cm', icon:'<path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-4-.9L3 20l1.1-4A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/><path d="M8 11h.01M12 11h.01M16 11h.01"/>',
     gear:['Meta Business Suite','Canva','CapCut','Metricool','Notion','TikTok Studio'] },
+  { id:'copy',   label:'Copywriter',    cls:'s-copy',   icon:'<path d="M4 7V4h16v3M9 20h6M12 4v16"/>',
+    gear:['Notion','Google Docs','Antidote','Semrush','ChatGPT'] },
   { id:'drop',   label:'Dropshipper',   cls:'s-drop',   icon:'<path d="M1 4h13v12H1zM14 8h4l3 3v5h-7"/><circle cx="5.5" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/>',
     gear:['Shopify','AutoDS','DSers','CJ Dropshipping','Minea','Meta Ads'] },
   { id:'ecom',   label:'E-commerce',    cls:'s-ecom',   icon:'<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/>',
@@ -579,6 +600,8 @@ const DEMO = [
   { id:'d5', name:'Sarah Dumont', discord:'sarah.fpv',    city:findCity('Bordeaux'),           radius:Infinity, remote:false, years:8, specs:['drone','film','photo'], gear:['DJI Avata 2','FPV','Brevet télépilote','Sony A7S III'], bio:'Pilote FPV certifiée, tournages pub et immobilier.', created:Date.now()-90*864e5 },
   { id:'d6', name:'Mehdi Karim',  discord:'mehdi.motion', city:findCity('Marseille'),          radius:50,  remote:true,  years:0.5, specs:['motion','mini'],        gear:['After Effects','Illustrator','Canva'], bio:'', created:Date.now()-1*864e5 },
   { id:'d7', name:'Camille Roux', discord:'cam.shop',     city:findCity('Nantes'),             radius:50,  remote:true,  years:3,   specs:['ecom','drop','cm'],     gear:['Shopify','Klaviyo','Meta Ads','Canva'], bio:'Lancement de boutiques Shopify et gestion des réseaux.', created:Date.now()-10*864e5 },
+  { id:'d8', name:'Théo Garnier', discord:'theo.grade',   city:findCity('Montpellier'),        radius:75,  remote:true,  years:5,   specs:['montage','color','son'], gear:['DaVinci Resolve Studio','Premiere Pro','Panneau Tangent','Zoom H6'], bio:'Montage et étalonnage de clips, pubs et documentaires.', created:Date.now()-3*864e5 },
+  { id:'d9', name:'Jade Morel',   discord:'jade.draws',   city:findCity('Perpignan'),          radius:30,  remote:true,  years:2,   specs:['illu','graph','ui','copy'], gear:['Procreate','Figma','Illustrator'], bio:'Identités visuelles, illustrations et textes de marque.', created:Date.now()-20*864e5 },
 ];
 
 const KEY_ME = 'vk-pj-me';
