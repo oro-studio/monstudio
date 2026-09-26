@@ -450,6 +450,7 @@ textarea.input{height:auto;min-height:80px;padding:12px 14px;resize:vertical}
    ===================================================================== */
 const FAMILIES = [
   { id:'av',     label:'Audiovisuel',       icon:'<rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10l6-3v10l-6-3"/>' },
+  { id:'photo',  label:'Photo',             icon:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>' },
   { id:'design', label:'Design',            icon:'<circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2a10 10 0 0 0 0 20 2 2 0 0 0 2-2c0-.5-.2-1-.5-1.4-.3-.3-.5-.8-.5-1.3a2 2 0 0 1 2-2h2.3A5.7 5.7 0 0 0 22 9.6C22 5.4 17.5 2 12 2z"/>' },
   { id:'mkt',    label:'Marketing & vente', icon:'<path d="M3 11l15-6v14L3 13z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>' },
 ];
@@ -465,7 +466,7 @@ const SPECIALTIES = [
     gear:['DaVinci Resolve Studio','Baselight','Panneau Tangent','Écran calibré','Sonde de calibration','LUTs'] },
   { id:'son',    family:'av', label:'Ingénieur du son', cls:'s-son', icon:'<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
     gear:['Pro Tools','Ableton Live','Logic Pro','Reaper','Zoom H6','Rode NTG','Micros HF Sennheiser'] },
-  { id:'photo',  family:'av', label:'Photographe',   cls:'s-photo',  icon:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+  { id:'photo',  family:'photo', label:'Photographe',   cls:'s-photo',  icon:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
     gear:['Sony A7 IV','Canon R5','Nikon Z6','Fujifilm X-T5','Flash Godox','Lightroom','Studio'] },
   { id:'web',    family:'design', label:'Web design',    cls:'s-web',    icon:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M6 6.5h.01M9 6.5h.01"/>',
     gear:['Figma','Webflow','Framer','WordPress','Photoshop'] },
